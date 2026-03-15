@@ -1,0 +1,64 @@
+name: Deploy ASP.NET Core API to IIS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build project
+      run: dotnet build --configuration Release
+
+    - name: Publish project
+      run: dotnet publish ./DeploymentAPI/DeploymentAPI.csproj -c Release -o ./publish
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: api-build
+        path: ./publish
+
+
+  deploy:
+
+    needs: build
+    runs-on: self-hosted
+
+    steps:
+
+    - name: Download artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: api-build
+        path: C:\deploy\api
+
+    - name: Stop IIS Site
+      run: |
+        Import-Module WebAdministration
+        Stop-WebSite -Name "MyAPI"
+
+    - name: Copy files to IIS
+      run: |
+        Copy-Item "C:\deploy\api\*" "D:\AutoDeploy" -Recurse -Force
+
+    - name: Start IIS Site
+      run: |
+        Import-Module WebAdministration
+        Start-WebSite -Name "MyAPI"
