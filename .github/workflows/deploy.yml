@@ -3,7 +3,7 @@ name: Deploy ASP.NET Core API to IIS
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
