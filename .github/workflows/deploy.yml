@@ -52,7 +52,7 @@ jobs:
     - name: Stop IIS Site
       run: |
         Import-Module WebAdministration
-        Stop-WebSite -Name "MyAPI"
+        Stop-WebSite -Name "AutoDeploySite"
 
     - name: Copy files to IIS
       run: |
@@ -61,4 +61,4 @@ jobs:
     - name: Start IIS Site
       run: |
         Import-Module WebAdministration
-        Start-WebSite -Name "MyAPI"
+        Start-WebSite -Name "AutoDeploySite"
