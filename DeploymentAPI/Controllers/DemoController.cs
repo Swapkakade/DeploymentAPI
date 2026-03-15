@@ -12,7 +12,7 @@ namespace DeploymentAPI.Controllers
         }
         [Route("/deployment-demo")]
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult Index2()
         {
             return Ok("Hello World. Checking with deployment on iis");
         }
